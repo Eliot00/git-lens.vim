@@ -38,11 +38,9 @@ def g:ToggleGitLens()
         g:GIT_LENS_ENABLED = true
         b:git_lens_enabled = true
         blame.Initialize()
-        blame.EnableShow()
     else
         g:GIT_LENS_ENABLED = false
         b:git_lens_enabled = false
         blame.Deinitialize()
-        blame.DisableShow()
     endif
 enddef

@@ -25,12 +25,14 @@ export def Initialize()
         autocmd BufLeave * OnBufferLeave()
         autocmd BufEnter,BufWritePost,CursorMoved * Refresh()
     augroup END
+    EnableShow()
 enddef
 
 export def Deinitialize()
     augroup git-lens
         autocmd!
     augroup END
+    DisableShow()
 enddef
 
 def OnBufferEnter()
