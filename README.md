@@ -23,3 +23,7 @@ call plug#end()
 ```
 
 2. Run `:PlugInstall`.
+
+## Appreciation
+
+This project is strongly inspired by [GitLens](https://github.com/gitkraken/vscode-gitlens) and [blamer.nvim](https://github.com/APZelos/blamer.nvim).
