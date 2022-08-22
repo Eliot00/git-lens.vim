@@ -175,6 +175,10 @@ def GetMessages(file_path: string, line_num: number): string
         endif
         commit_data[property] = value
     endfor
+    if commit_data.author ==? 'Not Committed Yet'
+        commit_data.author = 'You'
+        commit_data.summary = 'Uncommitted changes'
+    endif
 
     return GetConfig('blame_prefix') .. commit_data['author'] .. ' ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
 enddef
