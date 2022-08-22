@@ -15,6 +15,11 @@ vim9script
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+const GIT_LENS_DEFAULT_CONFIG = {
+    blame_prefix: '    ',
+    blame_delay: 500,
+}
+
 export def Initialize()
     if empty(prop_type_get('git-lens-blame'))
         prop_type_add('git-lens-blame', { highlight: 'Comment', })
@@ -81,7 +86,7 @@ export def Refresh()
         timer_stop(git_lens_timer_id)
     endif
     ClearVirtualText()
-    git_lens_timer_id = timer_start(500, (id) => Show())
+    git_lens_timer_id = timer_start(GetConfig('blame_delay'), (id) => Show())
 enddef
 
 def IsBufferTracker(): bool
@@ -171,11 +176,11 @@ def GetMessages(file_path: string, line_num: number): string
         commit_data[property] = value
     endfor
 
-    return commit_data['author'] .. ' ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
+    return GetConfig('blame_prefix') .. commit_data['author'] .. ' ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
 enddef
 
 def SetVirtualText(message: string, line_num: number)
-    prop_add(line_num, 0, { type: 'git-lens-blame', text: '    ' .. message, text_align: 'after' })
+    prop_add(line_num, 0, { type: 'git-lens-blame', text: message, text_align: 'after' })
 enddef
 
 def ClearVirtualText()
@@ -216,4 +221,12 @@ def SecondsToRelativeString(seconds: number, divisor: number, unit: string): str
     const amount = float2nr(round(seconds / divisor))
     const countable_unit = amount > 1 ? unit .. 's' : unit
     return string(amount) .. ' ' .. countable_unit .. ' ago'
+enddef
+
+def GetConfig(key: string): any
+    if !exists('g:GIT_LENS_CONFIG.' .. key)
+        return GIT_LENS_DEFAULT_CONFIG[key]
+    endif
+
+    return g:GIT_LENS_CONFIG[key]
 enddef

@@ -14,7 +14,7 @@ Clone all file to your runtime's `pack/**/start` directory, like:
 
 1. Add the following line to your `~/.vimrc`:
 
-```
+```vim
 call plug#begin()
 ...
 Plug 'Eliot00/git-lens.vim'
@@ -26,7 +26,18 @@ call plug#end()
 
 ## Configuration
 
-`git-lens.vim` is default not enabled, you can use `:call ToggleGitLens()` to toggle this plugin. And if you want this plugin default enabled, just set the global variable `GIT_LENS_ENABLED` to `true`.
+This plugin is default not enabled, you can use `:call ToggleGitLens()` to toggle this plugin. And if you want this plugin default enabled, just set the global variable `GIT_LENS_ENABLED` to `true`.
+
+### GIT_LENS_CONFIG
+
+Here is a global dict `GIT_LENS_CONFIG` for customization:
+
+```vim
+g:GIT_LENS_CONFIG = {
+    blame_prefix: '----', # default is four spaces
+    blame_delay: 2000 # default is 500
+}
+```
 
 ## Appreciation
 
