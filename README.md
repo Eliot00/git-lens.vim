@@ -24,6 +24,10 @@ call plug#end()
 
 2. Run `:PlugInstall`.
 
+## Configuration
+
+`git-lens.vim` is default not enabled, you can use `:call ToggleGitLens()` to toggle this plugin. And if you want this plugin default enabled, just set the global variable `GIT_LENS_ENABLED` to `true`.
+
 ## Appreciation
 
 This project is strongly inspired by [GitLens](https://github.com/gitkraken/vscode-gitlens) and [blamer.nvim](https://github.com/APZelos/blamer.nvim).

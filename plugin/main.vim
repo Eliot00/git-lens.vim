@@ -44,3 +44,7 @@ def g:ToggleGitLens()
         blame.Deinitialize()
     endif
 enddef
+
+if get(g:, 'GIT_LENS_ENABLED', false)
+    blame.Initialize()
+endif
