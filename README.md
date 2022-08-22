@@ -2,6 +2,8 @@
 
 A vim9 plugin inspired by VSCode's GitLens. 
 
+![preview](https://user-images.githubusercontent.com/18375468/185842698-f84c7c55-fdbe-4573-817c-e19934c0e436.gif)
+
 ## Installation
 
 ### Vim8 native pack system
