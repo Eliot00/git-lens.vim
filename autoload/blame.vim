@@ -50,6 +50,7 @@ def OnBufferEnter()
         return
     endif
     b:git_lens_enabled = true
+    UpdateGitUserConfig()
     EnableShow()
 enddef
 
@@ -102,6 +103,12 @@ def IsBufferTracker(): bool
     endif
 
     return true
+enddef
+
+var blame_current_user_email = 'unknown'
+def UpdateGitUserConfig()
+    const current_dir_path = shellescape(UnixPath(expand('%:h')))
+    blame_current_user_email = '<' .. trim(system('git -C ' .. current_dir_path .. ' config --get user.email')) .. '>'
 enddef
 
 def UnixPath(path: string): string
@@ -175,6 +182,9 @@ def GetMessages(file_path: string, line_num: number): string
         endif
         commit_data[property] = value
     endfor
+    if get(commit_data, 'author-mail', '') ==? blame_current_user_email
+        commit_data.author = 'You'
+    endif
     if commit_data.author ==? 'Not Committed Yet'
         commit_data.author = 'You'
         commit_data.summary = 'Uncommitted changes'
