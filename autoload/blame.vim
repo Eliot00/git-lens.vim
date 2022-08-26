@@ -18,11 +18,12 @@ vim9script
 const GIT_LENS_DEFAULT_CONFIG = {
     blame_prefix: '    ',
     blame_delay: 500,
+    blame_highlight: 'Comment',
 }
 
 export def Initialize()
     if empty(prop_type_get('git-lens-blame'))
-        prop_type_add('git-lens-blame', { highlight: 'Comment', })
+        prop_type_add('git-lens-blame', { highlight: GetConfig('blame_highlight'), })
     endif
     augroup git-lens
         autocmd!
