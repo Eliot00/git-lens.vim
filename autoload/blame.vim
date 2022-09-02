@@ -84,6 +84,13 @@ export def Refresh()
         return
     endif
 
+    const current_line = line('.')
+    if get(b:, 'git_lens_previous_line', 0) != current_line
+        b:git_lens_previous_line = current_line
+    else
+        return
+    endif
+
     if git_lens_timer_id != -1
         timer_stop(git_lens_timer_id)
     endif
