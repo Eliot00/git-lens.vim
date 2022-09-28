@@ -15,7 +15,7 @@ vim9script
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import autoload 'blame.vim'
+import autoload 'git_lens/blame.vim' as blame
 
 if exists('LOADED_GIT_LENS') || &cp
     finish
