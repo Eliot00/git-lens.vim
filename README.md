@@ -37,7 +37,6 @@ Here is a global dict `GIT_LENS_CONFIG` for customization:
 ```vim
 g:GIT_LENS_CONFIG = {
     blame_prefix: '----', # default is four spaces
-    blame_delay: 2000, # 500
     blame_highlight: 'YourHighlight', # Comment
 }
 ```
