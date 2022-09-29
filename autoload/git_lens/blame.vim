@@ -126,6 +126,7 @@ def Show()
         return
     endif
     const dir_path = UnixPath(expand('%:p:h'))
+    const line_num = line('.')
 
     const blame_command = [
         'git',
@@ -140,7 +141,6 @@ def Show()
         file_path
     ]
 
-    const line_num = line('.')
     job_start(blame_command, {
         "out_cb": (channel, message) => ShowBlameWithVirtualText(message, line_num),
         "mode": "raw"
