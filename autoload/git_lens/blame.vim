@@ -85,7 +85,6 @@ export def Refresh()
         return
     endif
 
-    ClearVirtualText()
     Show()
 enddef
 
@@ -148,6 +147,8 @@ def Show()
 enddef
 
 def ShowBlameWithVirtualText(message: string, line_num: number)
+    ClearVirtualText()
+
     const lines = split(message, '\n')
 
     const hash = split(lines[0], ' ')[0]
