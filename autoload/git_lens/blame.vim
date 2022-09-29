@@ -17,7 +17,6 @@ vim9script
 
 const GIT_LENS_DEFAULT_CONFIG = {
     blame_prefix: '    ',
-    blame_delay: 500,
     blame_highlight: 'Comment',
 }
 
@@ -126,13 +125,8 @@ def Show()
     if empty(file_path)
         return
     endif
-    const buffer_number = bufnr()
-    const line_num = line('.')
-    GetMessages(file_path, line_num)
-enddef
-
-def GetMessages(file_path: string, line_num: number)
     const dir_path = UnixPath(expand('%:p:h'))
+
     const blame_command = [
         'git',
         '-C',
@@ -145,6 +139,8 @@ def GetMessages(file_path: string, line_num: number)
         '--',
         file_path
     ]
+
+    const line_num = line('.')
     job_start(blame_command, {
         "out_cb": (channel, message) => ShowBlameWithVirtualText(message, line_num),
         "mode": "raw"
