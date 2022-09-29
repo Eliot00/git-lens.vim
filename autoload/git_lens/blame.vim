@@ -70,12 +70,7 @@ def EnableShow()
     Show()
 enddef
 
-var git_lens_timer_id = -1
 def DisableShow()
-    if git_lens_timer_id != -1
-        timer_stop(git_lens_timer_id)
-    endif
-    git_lens_timer_id = -1
     ClearVirtualText()
 enddef
 
@@ -91,11 +86,8 @@ export def Refresh()
         return
     endif
 
-    if git_lens_timer_id != -1
-        timer_stop(git_lens_timer_id)
-    endif
     ClearVirtualText()
-    git_lens_timer_id = timer_start(GetConfig('blame_delay'), (id) => Show())
+    Show()
 enddef
 
 def IsBufferTracker(): bool
@@ -130,54 +122,64 @@ def Show()
         return
     endif
 
-    const file_path = shellescape(UnixPath(expand('%:p')))
+    const file_path = UnixPath(expand('%:p'))
     if empty(file_path)
         return
     endif
     const buffer_number = bufnr()
     const line_num = line('.')
-    const message = GetMessages(file_path, line_num)
-    SetVirtualText(message, line_num)
+    GetMessages(file_path, line_num)
 enddef
 
-def GetMessages(file_path: string, line_num: number): string
-    const dir_path = shellescape(UnixPath(expand('%:h')))
-    const blame_command = 'git -C '
-        .. dir_path
-        .. ' --no-pager blame --line-porcelain -L '
-        .. line_num
-        .. ','
-        .. line_num
-        .. ' -- '
-        .. file_path
-    const result = system(blame_command)
-    const lines = split(result, '\n')
+def GetMessages(file_path: string, line_num: number)
+    const dir_path = UnixPath(expand('%:p:h'))
+    const blame_command = [
+        'git',
+        '-C',
+        dir_path,
+        '--no-pager',
+        'blame',
+        '--line-porcelain',
+        '-L',
+        line_num .. ',' .. line_num,
+        '--',
+        file_path
+    ]
+    job_start(blame_command, {
+        "out_cb": (channel, message) => ShowBlameWithVirtualText(message, line_num),
+        "mode": "raw"
+    })
+enddef
+
+def ShowBlameWithVirtualText(message: string, line_num: number)
+    const lines = split(message, '\n')
 
     const hash = split(lines[0], ' ')[0]
     const hash_is_empty = empty(matchstr(hash, '\c[0-9a-f]\{40}'))
 
     if hash_is_empty
-        if result =~? 'fatal' && result =~? 'not a git repository'
+        echoerr 'hash is empty' .. hash
+        if message =~? 'fatal' && message =~? 'not a git repository'
             echoerr '[git-lens] Not a git repository'
-            return ''
+            return
         endif
 
         # Known git errors will be silenced
-        if result =~? 'no matches found'
-            return ''
-        elseif result =~? 'no such path'
-            return ''
-        elseif result =~? 'is outside repository'
-            return ''
-        elseif result =~? 'has only' && result =~? 'lines'
-            return ''
-        elseif result =~? 'no such ref'
-            return ''
+        if message =~? 'no matches found'
+            return
+        elseif message =~? 'no such path'
+            return
+        elseif message =~? 'is outside repository'
+            return
+        elseif message =~? 'has only' && message =~? 'lines'
+            return
+        elseif message =~? 'no such ref'
+            return
         endif
 
         # Echo unknown errors in order to catch them
-        echoerr '[git-lens] ' .. result
-        return ''
+        echoerr '[git-lens] ' .. message
+        return
     endif
 
     final commit_data = {}
@@ -193,12 +195,14 @@ def GetMessages(file_path: string, line_num: number): string
     if get(commit_data, 'author-mail', '') ==? blame_current_user_email
         commit_data.author = 'You'
     endif
-    if commit_data.author ==? 'Not Committed Yet'
+    if get(commit_data, 'author', '') ==? 'Not Committed Yet'
         commit_data.author = 'You'
         commit_data.summary = 'Uncommitted changes'
     endif
 
-    return GetConfig('blame_prefix') .. commit_data['author'] .. ' ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
+    const result = GetConfig('blame_prefix') .. commit_data['author'] .. ' • ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
+
+    SetVirtualText(result, line_num)
 enddef
 
 def SetVirtualText(message: string, line_num: number)
