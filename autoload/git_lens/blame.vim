@@ -203,7 +203,7 @@ def ShowBlameWithVirtualText(message: string, line_num: number)
 enddef
 
 def SetVirtualText(message: string, line_num: number)
-    prop_add(line_num, 0, { type: 'git-lens-blame', text: message, text_align: 'after' })
+    prop_add(line_num, 0, { type: 'git-lens-blame', text: message, text_align: 'after', text_wrap: 'wrap' })
 enddef
 
 def ClearVirtualText()
