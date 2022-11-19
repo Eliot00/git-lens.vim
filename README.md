@@ -2,6 +2,8 @@
 
 A vim9 plugin inspired by VSCode's GitLens. 
 
+This plugin is written using vim9 script, **make sure the output is 1 with the `:echo has('vim9script')` command in vim.**
+
 ![preview](https://user-images.githubusercontent.com/18375468/185842698-f84c7c55-fdbe-4573-817c-e19934c0e436.gif)
 
 ## Installation
