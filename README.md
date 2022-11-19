@@ -28,11 +28,11 @@ call plug#end()
 
 ## Configuration
 
-This plugin is default not enabled, you can use `:call ToggleGitLens()` to toggle this plugin. And if you want this plugin default enabled, just set the global variable `GIT_LENS_ENABLED` to `true`.
+This plugin is default not enabled, you can use `:call ToggleGitLens()` to toggle this plugin. And if you want this plugin default enabled, just set the global variable `g:GIT_LENS_ENABLED` to `true`.
 
 ### GIT_LENS_CONFIG
 
-Here is a global dict `GIT_LENS_CONFIG` for customization:
+Here is a global dict `g:GIT_LENS_CONFIG` for customization:
 
 ```vim
 g:GIT_LENS_CONFIG = {
