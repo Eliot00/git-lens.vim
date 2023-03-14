@@ -40,6 +40,7 @@ Here is a global dict `g:GIT_LENS_CONFIG` for customization:
 g:GIT_LENS_CONFIG = {
     blame_prefix: '----', # default is four spaces
     blame_highlight: 'YourHighlight', # Comment
+    blame_wrap: false, # blame text wrap
 }
 ```
 

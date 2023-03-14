@@ -18,6 +18,7 @@ vim9script
 const GIT_LENS_DEFAULT_CONFIG = {
     blame_prefix: '    ',
     blame_highlight: 'Comment',
+    blame_wrap: true,
 }
 
 export def Initialize()
@@ -203,7 +204,17 @@ def ShowBlameWithVirtualText(message: string, line_num: number)
 enddef
 
 def SetVirtualText(message: string, line_num: number)
-    prop_add(line_num, 0, { type: 'git-lens-blame', text: message, text_align: 'after', text_wrap: 'wrap' })
+    const text_wrap = GetConfig('blame_wrap') ? 'wrap' : 'truncate'
+
+    prop_add(
+        line_num,
+        0,
+        {
+            type: 'git-lens-blame',
+            text: message, text_align: 'after',
+            text_wrap: text_wrap,
+        }
+    )
 enddef
 
 def ClearVirtualText()
