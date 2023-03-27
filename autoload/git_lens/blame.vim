@@ -142,12 +142,12 @@ def Show()
     ]
 
     job_start(blame_command, {
-        "out_cb": (channel, message) => ShowBlameWithVirtualText(message, line_num),
+        "out_cb": (channel, message) => ShowBlameWithVirtualText(message),
         "mode": "raw"
     })
 enddef
 
-def ShowBlameWithVirtualText(message: string, line_num: number)
+def ShowBlameWithVirtualText(message: string)
     ClearVirtualText()
 
     const lines = split(message, '\n')
@@ -200,11 +200,12 @@ def ShowBlameWithVirtualText(message: string, line_num: number)
 
     const result = GetConfig('blame_prefix') .. commit_data['author'] .. ' • ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
 
-    SetVirtualText(result, line_num)
+    SetVirtualText(result)
 enddef
 
-def SetVirtualText(message: string, line_num: number)
+def SetVirtualText(message: string)
     const text_wrap = GetConfig('blame_wrap') ? 'wrap' : 'truncate'
+    const line_num = line('.')
 
     prop_add(
         line_num,
