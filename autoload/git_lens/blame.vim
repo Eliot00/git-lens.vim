@@ -115,6 +115,8 @@ def UnixPath(path: string): string
 enddef
 const IS_WINDOWS = has('win16') || has('win32') || has('win64') || has('win95')
 
+var blame_job = null_job
+
 def Show()
     const is_special_buffer = &buftype !=# ''
     if is_special_buffer
@@ -141,7 +143,10 @@ def Show()
         file_path
     ]
 
-    job_start(blame_command, {
+    if job_status(blame_job) == "run"
+        job_stop(blame_job)
+    endif
+    blame_job = job_start(blame_command, {
         "out_cb": (channel, message) => ShowBlameWithVirtualText(message),
         "mode": "raw"
     })
