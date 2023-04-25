@@ -19,6 +19,7 @@ const GIT_LENS_DEFAULT_CONFIG = {
     blame_prefix: '    ',
     blame_highlight: 'Comment',
     blame_wrap: true,
+    blame_empty_line: true,
 }
 
 export def Initialize()
@@ -118,6 +119,10 @@ const IS_WINDOWS = has('win16') || has('win32') || has('win64') || has('win95')
 var blame_job = null_job
 
 def Show()
+    if !GetConfig('blame_empty_line') && empty(getline('.'))
+        return
+    endif
+
     const is_special_buffer = &buftype !=# ''
     if is_special_buffer
         return
