@@ -128,6 +128,10 @@ def Show()
         return
     endif
 
+    if winwidth(0) - virtcol('$') < 10
+        return
+    endif
+
     const file_path = UnixPath(expand('%:p'))
     if empty(file_path)
         return
