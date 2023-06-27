@@ -129,6 +129,7 @@ def Show()
     endif
 
     if winwidth(0) - virtcol('$') < 10
+        ClearVirtualText()
         return
     endif
 
