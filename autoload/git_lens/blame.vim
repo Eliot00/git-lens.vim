@@ -20,6 +20,7 @@ const GIT_LENS_DEFAULT_CONFIG = {
     blame_highlight: 'Comment',
     blame_wrap: true,
     blame_empty_line: true,
+    blame_delay: 500,
 }
 
 export def Initialize()
@@ -30,7 +31,7 @@ export def Initialize()
         autocmd!
         autocmd BufEnter * OnBufferEnter()
         autocmd BufLeave * OnBufferLeave()
-        autocmd BufEnter,BufWritePost,CursorHold * Refresh()
+        autocmd BufEnter,BufWritePost,CursorMoved * Refresh()
     augroup END
     EnableShow()
 enddef
@@ -71,7 +72,12 @@ def EnableShow()
     Show()
 enddef
 
+var git_lens_timer_id = -1
 def DisableShow()
+    if git_lens_timer_id != -1
+        timer_stop(git_lens_timer_id)
+    endif
+    git_lens_timer_id = -1
     ClearVirtualText()
 enddef
 
@@ -87,7 +93,12 @@ export def Refresh()
         return
     endif
 
-    Show()
+    if git_lens_timer_id != -1
+        timer_stop(git_lens_timer_id)
+    endif
+
+    ClearVirtualText()
+    git_lens_timer_id = timer_start(GetConfig('blame_delay'), (id) => Show())
 enddef
 
 def IsBufferTracker(): bool
@@ -129,7 +140,6 @@ def Show()
     endif
 
     if winwidth(0) - virtcol('$') < 10
-        ClearVirtualText()
         return
     endif
 
@@ -163,7 +173,6 @@ def Show()
 enddef
 
 def ShowBlameWithVirtualText(message: string)
-    ClearVirtualText()
 
     const lines = split(message, '\n')
 
