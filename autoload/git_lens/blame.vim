@@ -30,7 +30,7 @@ export def Initialize()
         autocmd!
         autocmd BufEnter * OnBufferEnter()
         autocmd BufLeave * OnBufferLeave()
-        autocmd BufEnter,BufWritePost,CursorMoved * Refresh()
+        autocmd BufEnter,BufWritePost,CursorHold * Refresh()
     augroup END
     EnableShow()
 enddef
