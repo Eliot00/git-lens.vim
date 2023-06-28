@@ -31,7 +31,7 @@ export def Initialize()
         autocmd!
         autocmd BufEnter * OnBufferEnter()
         autocmd BufLeave * OnBufferLeave()
-        autocmd BufEnter,BufWritePost,CursorMoved * Refresh()
+        autocmd BufWritePost,CursorMoved * Refresh()
     augroup END
     EnableShow()
 enddef
@@ -54,13 +54,14 @@ def OnBufferEnter()
     endif
     b:git_lens_enabled = true
     UpdateGitUserConfig()
-    EnableShow()
+    Refresh()
 enddef
 
 def OnBufferLeave()
     if !g:GIT_LENS_ENABLED || !get(b:, 'git_lens_enabled', false)
         return
     endif
+    b:git_lens_previous_line = 0
     DisableShow()
 enddef
 
