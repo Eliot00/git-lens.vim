@@ -131,16 +131,16 @@ const IS_WINDOWS = has('win16') || has('win32') || has('win64') || has('win95')
 var blame_job = null_job
 
 def Show()
-    if !GetConfig('blame_empty_line') && empty(getline('.'))
-        return
-    endif
-
     const is_special_buffer = &buftype !=# ''
     if is_special_buffer
         return
     endif
 
-    if winwidth(0) - virtcol('$') < 10
+    if !GetConfig('blame_empty_line') && empty(getline('.'))
+        return
+    endif
+
+    if !GetConfig('blame_wrap') && (winwidth(0) - &numberwidth - 1) == virtcol('$')
         return
     endif
 
