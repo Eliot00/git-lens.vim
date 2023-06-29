@@ -225,6 +225,7 @@ def ShowBlameWithVirtualText(message: string)
 
     const result = GetConfig('blame_prefix') .. commit_data['author'] .. ' • ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
 
+    ClearVirtualText()
     SetVirtualText(result)
 enddef
 
