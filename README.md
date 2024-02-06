@@ -42,6 +42,7 @@ g:GIT_LENS_CONFIG = {
     blame_highlight: 'YourHighlight', # Comment
     blame_wrap: false, # blame text wrap
     blame_empty_line: false, # Whether to blame empty line.
+    blame_delay: 200, # default is 500
 }
 ```
 
