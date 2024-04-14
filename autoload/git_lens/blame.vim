@@ -223,7 +223,7 @@ def ShowBlameWithVirtualText(message: string)
         commit_data.summary = 'Uncommitted changes'
     endif
 
-    const result = GetConfig('blame_prefix') .. commit_data['author'] .. ' • ' .. commit_data['author-time'] .. ' • ' .. commit_data['summary']
+    const result = FormatBlameText(commit_data)
 
     ClearVirtualText()
     SetVirtualText(result)
@@ -290,4 +290,21 @@ def GetConfig(key: string): any
     endif
 
     return g:GIT_LENS_CONFIG[key]
+enddef
+
+def FormatBlameText(commit_data: any): string
+    if exists('g:GIT_LENS_CONFIG.blame_template')
+        var result = g:GIT_LENS_CONFIG.blame_template
+        for field in ['author', 'author-time', 'summary']
+            result = substitute(result, '\m\C<' .. field .. '>', commit_data[field], 'g')
+        endfor
+        return result
+    else
+        return GetConfig('blame_prefix')
+            .. commit_data['author']
+            .. ' • '
+            .. commit_data['author-time']
+            .. ' • '
+            .. commit_data['summary']
+    endif
 enddef
